@@ -2,6 +2,7 @@ import json
 import os
 import threading
 import time
+import schedule
 from kucoin.client import Margin, Market
 from secrets import *
  
@@ -37,10 +38,14 @@ def autoLendCurrencies(currencies):
 		client.set_auto_lend(i,True, retainSize = 0, dailyIntRate= 0, term = 7)
 		time.sleep(WAIT_TIME)
 
+def resetLendings():		
+	activeOrders = client.get_active_order()
+	(currencies, orderIds) = extractActiveOrdersData(activeOrders['items'])
+	cancelOrders(orderIds)
+	autoLendCurrencies(currencies)
+	print("Hacido")
 
-activeOrders = client.get_active_order()
-print(activeOrders['items'])
-(currencies, orderIds) = extractActiveOrdersData(activeOrders['items'])
-cancelOrders(orderIds)
-autoLendCurrencies(currencies)
-print("Hacido")
+#schedule.every(5).minutes.do(resetLendings)	
+#schedule.every().hour.do(resetLendings)
+
+resetLendings()
