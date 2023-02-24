@@ -1,8 +1,6 @@
 import json
 import os
-import threading
 import time
-import schedule
 from kucoin.client import Margin, Market
 from secrets import *
  
